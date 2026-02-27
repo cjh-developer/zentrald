@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ┌──────────────────────────────────────────────────────────────┐
+  │  Zentrald — Password Encoding Configuration                  │
+  ├──────────────────────────────────────────────────────────────┤
+  │  hash-algorithm  SHA-256 | SHA-512                           │
+  │  encoding        HEX     | BASE64                            │
+  │                                                              │
+  │  Encoding pipeline:                                          │
+  │    plaintext → hash-algorithm → encoding → stored password   │
+  │                                                              │
+  │  Examples:                                                   │
+  │    SHA-512 + HEX    : 128-char hex string                    │
+  │    SHA-512 + BASE64 : 88-char Base64 string                  │
+  │    SHA-256 + HEX    : 64-char hex string                     │
+  │    SHA-256 + BASE64 : 44-char Base64 string                  │
+  │                                                              │
+  │  ※ After changing this file, restart the application.        │
+  │    All stored passwords must be re-encoded with the new      │
+  │    combination before logging in again.                      │
+  └──────────────────────────────────────────────────────────────┘
+-->
+<crypto-config>
+
+    <password-encoding>
+        <!-- 해시 알고리즘: SHA-256 또는 SHA-512 -->
+        <hash-algorithm>SHA-512</hash-algorithm>
+
+        <!-- 인코딩 방식: HEX 또는 BASE64 -->
+        <encoding>HEX</encoding>
+    </password-encoding>
+
+</crypto-config>

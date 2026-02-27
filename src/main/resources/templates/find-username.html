@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ── 화면 위변조 방지 메타 ───────────────────────────────────────── -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="_csrf"        th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <title th:text="#{find.title}">아이디 찾기 - Zentrald</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .card {
+            background: #fff;
+            padding: 40px 36px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+        }
+        .lang-switcher {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            font-size: 0.78rem;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+        .lang-switcher a { color: #9ca3af; text-decoration: none; transition: color 0.2s; }
+        .lang-switcher a:hover, .lang-switcher a.active { color: #4f46e5; font-weight: 600; }
+        .lang-sep { color: #e5e7eb; }
+
+        .brand {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4f46e5;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+            margin-top: 12px;
+        }
+        h2 { text-align: center; font-size: 1.1rem; color: #1f2937; margin-bottom: 6px; }
+        .subtitle { text-align: center; font-size: 0.85rem; color: #9ca3af; margin-bottom: 24px; }
+        .form-group { margin-bottom: 16px; }
+        label { display: block; margin-bottom: 6px; font-size: 0.88rem; color: #374151; font-weight: 500; }
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            background: #4f46e5;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 0.2s;
+        }
+        .btn-primary:hover { background: #4338ca; }
+        .alert {
+            padding: 10px 14px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            font-size: 0.88rem;
+        }
+        .alert-error { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
+        .result-box {
+            background: #ede9fe;
+            border: 1px solid #c4b5fd;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .result-label { font-size: 0.8rem; color: #7c3aed; letter-spacing: 0.3px; margin-bottom: 6px; }
+        .result-value { font-size: 1.4rem; font-weight: 700; color: #4f46e5; }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 22px;
+            font-size: 0.85rem;
+            color: #6b7280;
+            text-decoration: none;
+        }
+        .back-link:hover { color: #4f46e5; }
+    </style>
+</head>
+<body>
+    <div class="card">
+
+        <!-- Language switcher -->
+        <div class="lang-switcher">
+            <a href="?lang=ko"
+               th:classappend="${#locale.language == 'ko'} ? ' active'"
+               th:text="#{lang.ko}">한국어</a>
+            <span class="lang-sep">|</span>
+            <a href="?lang=en"
+               th:classappend="${#locale.language == 'en'} ? ' active'"
+               th:text="#{lang.en}">English</a>
+        </div>
+
+        <div class="brand">Zentrald</div>
+        <h2 th:text="#{find.heading}">아이디 찾기</h2>
+        <p class="subtitle" th:text="#{find.subtitle}">이름과 이메일 주소를 입력해 주세요.</p>
+
+        <!-- Result -->
+        <div class="result-box" th:if="${foundUsername}">
+            <div class="result-label" th:text="#{find.result.label}">회원님의 아이디는</div>
+            <div class="result-value" th:text="${foundUsername}">username</div>
+        </div>
+
+        <div class="alert alert-error" th:if="${errorMsg}" th:text="${errorMsg}"></div>
+
+        <!-- th:action 이 CSRF hidden 필드를 자동 삽입 -->
+        <form th:action="@{/account/find-username}" method="post" novalidate>
+            <div class="form-group">
+                <label for="name" th:text="#{find.name}">이름</label>
+                <input type="text" id="name" name="name"
+                       th:placeholder="#{find.name.placeholder}"
+                       autocomplete="name"
+                       spellcheck="false"
+                       required autofocus>
+            </div>
+            <div class="form-group">
+                <label for="email" th:text="#{find.email}">이메일</label>
+                <input type="email" id="email" name="email"
+                       th:placeholder="#{find.email.placeholder}"
+                       autocomplete="email"
+                       required>
+            </div>
+            <button type="submit" class="btn-primary" th:text="#{find.submit}">아이디 찾기</button>
+        </form>
+
+        <a th:href="@{/}" class="back-link" th:text="#{find.back}">← 로그인으로 돌아가기</a>
+    </div>
+</body>
+</html>
