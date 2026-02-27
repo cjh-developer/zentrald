@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# zentrald
-=======
 # Zentrald
 
 Spring Boot 기반 인증 시스템 프로젝트.
@@ -206,6 +203,45 @@ crypto.config.path=file:/etc/zentrald/crypto-config.xml
 
 ---
 
+## Git 저장소 관리
+
+### 최초 설정 (클론)
+
+```bash
+git clone https://github.com/cjh-developer/zentrald.git
+cd zentrald
+```
+
+### 최초 설정 (로컬 프로젝트를 원격에 연결)
+
+```bash
+git init
+git add .
+git commit -m "feat: initial commit"
+git remote add origin https://github.com/cjh-developer/zentrald.git
+git push -u origin master
+```
+
+### 변경사항 반영
+
+```bash
+git add .
+git commit -m "커밋 메시지"
+git push
+```
+
+### 인증 오류 발생 시 (403)
+
+GitHub Personal Access Token을 사용하여 push합니다.
+
+1. GitHub → Settings → Developer settings → Personal access tokens → Generate new token
+2. `repo` 권한 체크 후 토큰 발급
+3. push 시 비밀번호 입력란에 토큰 입력
+
+> **보안 주의**: 토큰은 URL에 직접 포함하지 말고, 입력 프롬프트 또는 자격증명 관리자를 통해 사용하세요.
+
+---
+
 ## 향후 개선 사항
 
 - [ ] 이메일 인증 기반 아이디 찾기 / 비밀번호 초기화
@@ -214,4 +250,3 @@ crypto.config.path=file:/etc/zentrald/crypto-config.xml
 - [ ] HTTPS 적용 후 HSTS 헤더 활성화 (`SecurityConfig` 주석 해제)
 - [ ] 비밀번호 인코딩을 BCrypt / Argon2로 교체
 - [ ] 외부 CSS 파일 분리 → CSP `unsafe-inline` 제거 가능
->>>>>>> origin/main
